@@ -1,0 +1,5 @@
+doc/parscit*.zip
+tmp/*
+archive/*
+thang/sectLabel/experiments
+thang/genericSect
