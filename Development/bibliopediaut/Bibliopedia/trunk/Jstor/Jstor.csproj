@@ -75,7 +75,7 @@
       <HintPath>..\ReferenceBinaries\FluentNHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\ReferenceBinaries\NUnit-2.5.2.9222\bin\net-2.0\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -123,6 +123,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Domain\Domain.cd" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModelExerciser\Parallel.fsproj">
