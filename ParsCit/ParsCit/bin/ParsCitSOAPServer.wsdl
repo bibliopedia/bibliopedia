@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://services.bibliopedia.org/ParsCitSOAPServer" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ParsCitSOAPServer" targetNamespace="http://services.bibliopedia.org/ParsCitSOAPServer">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/ParsCitSOAPServer/">
+      <xsd:element name="ExtractCitationsRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExtractCitationsResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+      			<xsd:element name="out" type="xsd:string" />
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="">
+      	<xsd:complexType>
+      		<xsd:sequence>
+      			<xsd:element name="in" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Response">
+      	<xsd:complexType>
+      		<xsd:sequence>
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ExtractCitationsRequest">
+    <wsdl:part element="tns:ExtractCitationsRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ExtractCitationsResponse">
+    <wsdl:part element="tns:ExtractCitationsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="Request">
+  	<wsdl:part name="parameters" element="tns:"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Response">
+  	<wsdl:part name="parameters" element="tns:Response"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ParsCitSOAPServer">
+    <wsdl:operation name="ExtractCitations">
+      <wsdl:input message="tns:ExtractCitationsRequest"/>
+      <wsdl:output message="tns:ExtractCitationsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ParsCitSOAPServerSOAP" type="tns:ParsCitSOAPServer">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ExtractCitations">
+      <soap:operation soapAction="http://www.example.org/ParsCitSOAPServer/ExtractCitations"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ParsCitSOAPServer">
+    <wsdl:port binding="tns:ParsCitSOAPServerSOAP" name="ParsCitSOAPServer">
+      <soap:address location="http://services.bibliopedia.org/ParsCitSOAPService.cgi"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
