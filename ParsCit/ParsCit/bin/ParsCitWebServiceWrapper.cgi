@@ -23,12 +23,6 @@ SOAP::Transport::HTTP::CGI
 
 package ParsCitWrapper;
 
-sub new {
-	my $self = shift;
-	my $class = ref($self) || $self;
-	return( bless {} => $class );
-}
-
 sub extractCitations {
 	my ($class, $text) = @_;
 	my $parsCitDir = "/home/bibliopedia/ParsCit/bin/";
