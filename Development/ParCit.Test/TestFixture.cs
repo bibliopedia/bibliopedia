@@ -15,9 +15,9 @@ namespace ParCit.Test
         [Test]
         public void is_service_running()
         {
-            Service.
+         //   Service.
 
-            Assert.IsNotNullOrEmpty(result);
+            //Assert.IsNotNullOrEmpty(result);
         }
 
         [Test]

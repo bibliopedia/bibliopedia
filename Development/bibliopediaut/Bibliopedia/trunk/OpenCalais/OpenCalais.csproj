@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>..\ReferenceBinaries\NUnit-2.5.2.9222\bin\net-2.0\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Service References\Calais\item.wsdl" />
     <None Include="Service References\Calais\OpenCalais.Calais.EnlightenResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

@@ -14,7 +14,7 @@ namespace CitationSemanticExtraction
         [Test]
         public void WhatHappens()
         {
-            var citationXml = new Article(@"10.2307/1618158").CitationsXml();
+            var citationXml = (new Resource(@"10.2307/1618158")).CitationsXml;
             var calaisResults = new CalaisTextProcessor().Process(citationXml);
             Assert.IsNotEmpty(calaisResults);
         }
