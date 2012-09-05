@@ -1,0 +1,62 @@
+<?php
+
+abstract class SparqlViewsQueryTest extends ViewsTestCase {
+  var $endpoint = array(
+    'title' => 'SPARQL Views test',
+    'uri' => 'http://localhost/arc2/sparql_views_test/sparql.php',
+  );
+
+  // Field names.
+  var $main_resource = 'sparql_views_test_person';
+  var $main_resource_rdftype = 'sparql_views_test_person_type';
+  var $field_name = 'sparql_views_test_person_sparql_views_test_name';
+  var $field_affiliation = 'sparql_views_test_person_sparql_views_test_affiliation';
+  var $rel_1 = 'sparql_views_test_person_sparql_views_test_paper';
+  var $rel_1_field_name = 'sparql_views_test_paper_sparql_views_test_name';
+  var $rel_knows = 'sparql_views_test_person_sparql_views_test_knows';
+
+  protected function setUp() {
+    parent::setUp('sparql_views', 'sparql_registry', 'views', 'views_ui', 'sparql_views_test');
+  }
+
+  /**
+   * Build and return a basic view of the views_test table.
+   */
+  protected function getBasicView() {
+    views_include('view');
+
+    $endpoint = sparql_views_get_endpoint($this->endpoint['uri']);
+
+    // Create the basic view.
+    $view = new view();
+    $view->name = 'sparql_views_test';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = $endpoint->table_id;
+    $view->human_name = 'SPARQL Views Test';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    $display = $view->new_display('default', 'Master', 'default');
+    $display->override_option('query', array(
+      'type' => 'sparql_views_query',
+    ));
+    $display->override_option('fields', array(
+      'main resource' => array(
+        'id' => $this->main_resource,
+        'table' => $endpoint->table_id,
+        'field' => $this->main_resource,
+        'relationship' => 'none',
+      ),
+      'field 1' => array(
+        'id' => $this->field_name,
+        'table' => $endpoint->table_id,
+        'field' => $this->field_name,
+        'relationship' => 'none',
+      ),
+    ));
+
+    return $view;
+  }
+}

@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Implements hook_views_api().
+ */
+function sparql_views_test_views_api() {
+  return array(
+    'api' => '3.0',
+  );
+}
+
+/**
+ * Implements hook_rdf_mapping().
+ */
+function sparql_views_test_rdf_mapping() {
+  $return = array(
+    array(
+      'type' => 'sparql_views_resource',
+      'bundle' => 'sparql_views_test_person',
+      'mapping' => array(
+        'rdftype' => array('foaf:Person'),
+        'sparql_views_test_name' => array(
+          'predicates' => array('foaf:name'),
+        ),
+        'sparql_views_test_age' => array(
+          'predicates' => array('foaf:age'),
+        ),
+        'sparql_views_test_person_image' => array(
+          'predicates' => array('foaf:img'),
+        ),
+        'sparql_views_test_paper' => array(
+          'predicates' => array('foaf:made'),
+        ),
+        'sparql_views_test_knows' => array(
+          'predicates' => array('foaf:knows'),
+        ),
+        'sparql_views_test_affiliation' => array(
+          'predicates' => array('swc:affiliation'),
+        ),
+      ),
+    ),
+    array(
+      'type' => 'sparql_views_resource',
+      'bundle' => 'sparql_views_test_paper',
+      'mapping' => array(
+        'rdftype' => array('http://swrc.ontoware.org/ontology#InProceedings'),
+        'sparql_views_test_name' => array(
+          'predicates' => array('rdfs:label'),
+        ),
+      ),
+    ),
+  );
+
+  return $return;
+}
+
+/**
+ * Implements hook_rdf_namespaces().
+ */
+function sparql_views_test_rdf_namespaces() {
+  return array(
+    'swc' => 'http://data.semanticweb.org/ns/swc/ontology#',
+  );
+}

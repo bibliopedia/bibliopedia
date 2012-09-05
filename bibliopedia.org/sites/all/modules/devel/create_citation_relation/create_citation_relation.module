@@ -1,0 +1,26 @@
+<?php
+/*
+ * Hook into Rules to create a new action
+ */
+function create_citation_relation_rules_action_info() {
+	$defaults = array(
+			'parameter' => array(
+					'account' => array(
+							'type' => 'user',
+							'label' => t('User'),
+							'save' => TRUE,
+					),
+			),
+			'group' => t('Bibliopedia'),
+			'access callback' => 'rules_user_integration_access',
+	);
+	$actions['user_block'] = $defaults + array(
+			'label' => t('Block a user'),
+			'base' => 'rules_action_user_block',
+	);
+	$actions['user_unblock'] = $defaults + array(
+			'label' => t('Unblock a user'),
+			'base' => 'rules_action_user_unblock',
+	);
+	return $actions;
+}

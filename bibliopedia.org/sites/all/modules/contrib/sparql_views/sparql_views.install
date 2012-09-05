@@ -1,0 +1,156 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the sparql_views_resource module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function sparql_views_schema() {
+  // Defines schema fields required for exportable entities.
+  $entity_exportable_schema_fields = array(
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      // Set the default to ENTITY_CUSTOM without using the constant as it is
+      // not safe to use it at this point.
+      'default' => 0x01,
+      'size' => 'tiny',
+      'description' => 'The exportable status of the entity.',
+    ),
+    'module' => array(
+      'description' => 'The name of the providing module if the entity has been defined in code.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ),
+  );
+
+  $schema['sparql_views_resource_type'] = array(
+    'description' => 'Storage for user-defined sparql_views_resource types.',
+    'fields' => array(
+      // Although the "name" should be enough as the primary key, the numeric ID
+      // is required for the internal use of entity API.
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric sparql_views_resource type ID.',
+      ),
+      'name' => array(
+        'description' => 'The unified identifier for a sparql_views_resource type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'label' => array(
+        'description' => 'Label for this sparql_views_resource.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ) + $entity_exportable_schema_fields,
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  $schema['sparql_views_resource'] = array(
+    'description' => 'An instance of a sparql_views_resource type (e.g. like a node is an instance of a node type).',
+    'fields' => array(
+      'svid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'description' => 'The Unique ID of the sparql_views_resource.',
+      ),
+      'name' => array(
+        'description' => 'Reference to a sparql_views_resource a type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The user ID of the acting user.',
+        'type' => 'int',
+        'default value' => NULL,
+        'unsigned' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'When the sparql_views_resource instance was recorded.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+    ),
+    'foreign keys' => array(
+      'sparql_views_resource_type' => array(
+        'table' => 'sparql_views_resource_type',
+        'columns' => array('name' => 'name'),
+      ),
+    ),
+    'primary key' => array('svid'),
+  );
+
+  $schema['sparql_views_resource_type_endpoint'] = _sparql_views_schema_7200();
+
+  return $schema;
+}
+
+/**
+ * Change endpoint identifier from SRID to endpoint URI in sparql_views_resource_type_endpoint database table.
+ */
+function sparql_views_update_7211() {
+  $result = db_query("SELECT * FROM {sparql_views_resource_type_endpoint}");
+
+  db_drop_table('sparql_views_resource_type_endpoint');
+
+  db_create_table('sparql_views_resource_type_endpoint', _sparql_views_schema_7200());
+  foreach ($result as $record) {
+    $svid = $record->svid;
+    $endpoint = sparql_registry_load($record->srid);
+    $db_insert = db_insert('sparql_views_resource_type_endpoint')
+      ->fields(array(
+        'svid' => $svid,
+        'endpoint_uri' => $endpoint->uri,
+      ))
+      ->execute();
+  }
+}
+
+function _sparql_views_schema_7200() {
+  $schema = array(
+    'description' => 'Defines which resource types can be used with which endpoints.',
+    'fields' => array(
+      'svid' => array(
+        'description' => 'The SVID of the resource.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'endpoint_uri' => array(
+        'description' => 'The URI of the endpoint that this resource is found in.',
+        'type' => 'varchar',
+        // IE8's max length.
+        'length' => 2083,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'foreign keys' => array(
+      'svid' => array(
+        'table' => 'sparql_views_resource_type',
+        'columns' => array('svid' => 'svid'),
+      ),
+      'endpoint_uri' => array(
+        'table' => 'sparql_registry',
+        'columns' => array('endpoint_uri' => 'uri'),
+      ),
+    ),
+  );
+
+  return $schema;
+}

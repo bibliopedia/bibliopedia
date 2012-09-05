@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Tests basic query functionality.
+ *
+ * This ensures that the query plugin itself can be used and is able to run
+ * queries. It does not test whether SPARQL Views resource fields are available
+ * and can be used in queries.
+ */
+class SparqlViewsFormatterTest extends SparqlViewsQueryTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Tests SPARQL Views field formatters',
+      'description' => 'Tests some basic functions of SPARQL Views',
+      'group' => 'SPARQL Views',
+    );
+  }
+
+  protected function setUp() {
+    parent::setUp('libraries', 'sparql_views', 'sparql_registry', 'views', 'views_ui', 'sparql_views_test');
+
+    $web_user = $this->drupalCreateUser(array('administer sparql_views types', 'administer views'));
+    $this->drupalLogin($web_user);
+  }
+
+  public function testFieldQuery() {
+    views_invalidate_cache();
+    $this->drupalGet('sparql_views_test_formatters');
+
+    // Text fields should display properly. If not, something is completely
+    // borked.
+    $this->assertRaw('<span class="field-content">Lin Clark</span>', t('Text field formatter works.'));
+  
+    // Number field.
+    $this->assertRaw('<span class="field-content">11,101</span>', t('Number field formatter works'));
+
+    // Image field.
+    $img = $this->xpath('//img[contains(@src, "http://lin-clark.com/sites/default/files/linclark-front.jpg")]');
+    $this->assertTrue(!empty($img), t('Image field created.'));
+  }
+
+}
