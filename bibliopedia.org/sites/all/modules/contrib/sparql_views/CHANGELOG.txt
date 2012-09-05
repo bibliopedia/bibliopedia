@@ -1,0 +1,20 @@
+This log does not contain all changes. Instead, it only logs the changes that
+affect how views created with earlier versions of the module work and which may
+require action by the user.
+
+For a full list of changes, refer to the commit log at
+http://drupal.org/node/817148/commits
+
+SPARQL Views 7.x-2.x-dev
+------------------------
+- #1234558: Use endpoint_uri instead of srid to connect resource types to endpoints.
+- #1120682: Ensure that relation handling is predictable and robust.
+
+SPARQL Views 7.x-2.x-alpha4
+---------------------------
+- #1206420: Added DISTINCT option, turned on by default.
+
+SPARQL Views 7.x-2.x
+--------------------
+- Changed query building from direct query input to entity/field based input.
+- Removed SPARQL Views UI query builder

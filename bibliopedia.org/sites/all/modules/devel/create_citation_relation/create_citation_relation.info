@@ -1,0 +1,6 @@
+name = Create Citation Relation
+dependencies[] = rules
+description = Adds a Rule that enables the creation of relations between nodes based on a target node id that is entered in a custom field as text.
+package = Bibliopedia
+core = 7.x
+

@@ -1,0 +1,468 @@
+<?php
+/**
+ * @file
+ * API functions to manipulate SPARQL Views resources.
+ */
+function sparql_views_views_api() {
+  return array(
+    'api' => '3',
+    'path' => drupal_get_path('module', 'sparql_views'),
+  );
+}
+
+/*
+ * Implements hook_permission().
+ */
+function sparql_views_permission() {
+  return array(
+    'administer sparql_views types' => array(
+      'title' => t('Administer SPARQL Views entities'), 
+      'description' => t('Add new entities and manage fields to be used in SPARQL Views queries.'),
+    ),
+  );
+}
+
+/**
+ * Implement hook_entity_info().
+ */
+function sparql_views_entity_info() {
+  $items['sparql_views_resource_type'] = array(
+    'label' => t('SPARQL Views resource type'),
+    'controller class' => 'SparqlViewsController',
+    'entity class' => 'SparqlViewsResourceType',
+    'base table' => 'sparql_views_resource_type',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'label',
+      'name' => 'name',
+    ),
+    'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_sparql_views_type',
+    ),
+    'bundle of' => 'sparql_views_resource',
+    'module' => 'sparql_views',
+    'access callback' => 'sparql_views_resource_type_access',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/sparql-views',
+      'file' => 'sparql_views.admin.inc',
+      'controller class' => 'SparqlViewsResourceTypeUIController',
+    ),
+  );
+  $items['sparql_views_resource'] = array(
+    'label' => t('SPARQL Views resource'),
+    'controller class' => 'SparqlViewsController',
+    'entity class' => 'SparqlViewsResource',
+    'base table' => 'sparql_views_resource',
+    'fieldable' => TRUE,
+    'access callback' => 'sparql_views_resource_access',
+    'entity keys' => array(
+      'id' => 'svid',
+      // The resource has no label.
+      'label' => FALSE,
+      'bundle' => 'name',
+    ),
+    'bundles' => array(),
+    'bundle keys' => array(
+      'bundle' => 'name',
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => t('Full'),
+        'custom settings' => FALSE,
+      ),
+    ),
+    'module' => 'sparql_views',
+  );
+
+  // Attach all the bundles that have been defined by the user.
+  $bundles = db_query("SELECT name, label FROM {sparql_views_resource_type}")->fetchAll();
+  foreach ($bundles as $key => $bundle) {
+    $items['sparql_views_resource']['bundles'][$bundle->name] = array(
+      'label' => $bundle->label,
+      'admin' => array(
+        'path' => 'admin/structure/sparql-views/manage/%sparql_views_resource_type',
+        'real path' => 'admin/structure/sparql-views/manage/' . $bundle->name,
+        'bundle argument' => 4,
+        'access arguments' => array('administer sparql_views types'),
+      ),
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * @defgroup sparql_views_api SPARQL Views API
+ * @{
+ * SPARQL Views can be defined in code using modules. This means any dataset
+ * can have endpoints, SPARQL Views resource types, and default Views defined
+ * in a module. These defaults will be automatically installed upon module
+ * installation, but can be changed through the user interface by the site
+ * administrator.
+ *
+ * Modules must define their SPARQL Views types in their .install file.
+ * Defining SPARQL Views consists of the following steps:
+ * In .install
+ *   1. Register the endpoints used with sparql_views_register_endpoints.
+ *   2. Define the SPARQL Views resource types, setting the endpoints where this
+ *      resource is available, and save with sparql_views_resource_type_save.
+ *   3. Add field definitions for fields that will be used.
+ *   4. Add field instances to the SPARQL Views resource types.
+ * In .module
+ *   1. Define namespace mappings using hook_rdf_mapping. Try to use standard
+ *      prefixes for common vocabularies, such as those listed on
+ *      http://prefix.cc.
+ *   2. Define RDF mappings for SPARQL Views types using hook_rdf_mappings.
+ */
+
+/*
+ * Register SPARQL endpoints used by this module and get a list of the
+ * corresponding IDs for the submitted endpoints. If an endpoint is already
+ * registered for a URI, the ID for the pre-existing endpoint will be returned
+ * with no other action taken on that endpoint.
+ *
+ * @param $endpoints
+ *   An array of endpoint objects, keyed by label. If the endpoint is already
+ *   registered, the existing values are maintained.
+ *   
+ *   Required properties:
+ *     $endpoint->title - The human-readable name of the endpoint.
+ *     $endpoint->endpoint - The URI of the endpoint.
+ *   
+ * @return $endpoint_ids
+ *   An array of IDs, keyed by the labels passed by the caller.
+ *   For example:
+ *     array('DBpedia' => 2);
+ */
+function sparql_views_register_endpoints($endpoints = array()) {
+  $endpoint_ids = array();
+
+  foreach ($endpoints as $key => $endpoint) {
+    $endpoint_record = sparql_registry_load_by_uri($endpoint->uri);
+
+    if (empty($endpoint_record)) {
+      $endpoint_record = sparql_registry_save($endpoint);
+      $srid = $endpoint_record->srid;
+    }
+    else {
+      // In order to merge the two SPARQL registry objects, we convert to arrays
+      // and then convert the result to an object.
+      $updated_endpoint = (object) array_merge((array) $endpoint, (array) $endpoint_record);
+      sparql_registry_save($updated_endpoint);
+      $srid = $endpoint_record->srid;
+    }
+
+    $endpoint_ids[$key] = $srid;
+  }
+
+  return $endpoint_ids;
+}
+
+/**
+ * @} End of "defgroup sparql_views_api".
+ */
+
+/**
+ * A class used for SPARQL Views resource types.
+ */
+class SparqlViewsResourceType extends Entity {
+
+  public $name;
+  public $id;
+  public $label = '';
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'sparql_views_resource_type');
+  }
+}
+
+/**
+ * Creates a new resource type.
+ *
+ * If a resource type already exists, an exception will be thrown.
+ *
+ * @return SparqlViewsResourceType
+ *   Returns a new resource type object.
+ */
+function sparql_views_resource_type_create($name, $values = array()) {
+  // Make sure the resource type doesn't already exist to prevent duplicate key
+  // error.
+  if (sparql_views_resource_type_load($name)) {
+    throw new Exception('SPARQL Views resource type ' . check_plain($name) . ' already exists.');
+  }
+  $values['name'] = $name;
+  $return = entity_create('sparql_views_resource_type', $values);
+
+  return $return;
+}
+
+/**
+ * SparqlViewsResource type loader.
+ *
+ * @param $type_name
+ *   (optional) The name for this resource type. If no type is given all existing
+ *   types are returned.
+ *
+ * @return SparqlViewsResourceType
+ *   Returns a fully-loaded resource type definition if a type name is passed.
+ *   Else an array containing all types is returned.
+ */
+function sparql_views_resource_type_load($name = NULL) {
+  // Replace dashes with underscores so this can be used as menu argument
+  // loader too.
+  $types = entity_load_multiple_by_name('sparql_views_resource_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
+  if (isset($name)) {
+    return isset($types[$name]) ? $types[$name] : FALSE;
+  }
+  return $types;
+}
+
+/**
+ * Inserts or updates a resource object into the database.
+ *
+ * @param $resource
+ *   The resource object to be inserted.
+ *
+ * @return
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed.
+ */
+function sparql_views_resource_type_save($resource) {
+  return entity_save('sparql_views_resource_type', $resource);
+}
+
+/**
+ * Deletes an existing resource.
+ *
+ * @param $resource
+ *   The name of the resource type to be deleted.
+ */
+function sparql_views_resource_type_delete($resource) {
+  return entity_delete('sparql_views_resource_type', $resource);
+}
+
+/**
+ * A class used for resources.
+ */
+class SparqlViewsResource extends Entity {
+
+  public $name;
+  public $timestamp;
+
+  public function __construct($values = array()) {
+    if (isset($values['user'])) {
+      $values['uid'] = $values['user']->uid;
+      unset($values['user']);
+    }
+
+    parent::__construct($values, 'sparql_views_resource');
+    if (!isset($this->uid)) {
+      $this->uid = $GLOBALS['user']->uid;
+    }
+    if (!isset($this->timestamp)) {
+      $this->timestamp = time();
+    }
+  }
+
+  /**
+   * Returns the user associated with the resource.
+   */
+  public function user() {
+    return user_load($this->uid);
+  }
+
+  /**
+   * Sets a new user associated with the resource.
+   *
+   * @param $account
+   *   The user account object or the user account id (uid).
+   */
+  public function setUser($account) {
+    $this->uid = is_object($account) ? $account->uid : $account;
+  }
+
+  /**
+   * Gets the associated resource type.
+   *
+   * @return SparqlViewsResourceType
+   */
+  public function getType() {
+    return sparql_views_resource_type_load($this->name);
+  }
+
+  /**
+   * Generate an array for rendering the entity.
+   *
+   * @see entity_view()
+   */
+  public function view($view_mode = 'full', $langcode = NULL) {
+    $view =  parent::view($view_mode, $langcode);
+
+    $key = !empty($this->is_new) ? 0 : $this->svid;
+    // @todo Figure out what to render
+    $view['sparql_views_resource'][$key]['sparql_views_resource_render'] = array();
+    return $view;
+  }
+}
+
+/**
+ * Helper to easily create resources.
+ *
+ * @param $name
+ *   The resource type name.
+ * @param $values
+ *   Array with the following keys:
+ *   - "timestamp" - The unix timestamp of the creation time of the resource. If
+ *     empty the current time will be used.
+ * @param $account
+ *   Optional; The user object to associate the resource with. If empty, the
+ *   current user will be used.
+ */
+function sparql_views_resource_create($name, $values = array(), $account = NULL) {
+  $values['name'] = $name;
+  $values['user'] = $account;
+  return entity_create('sparql_views_resource', $values);
+}
+
+/**
+ * SparqlViewsResource load.
+ *
+ * @param $mid
+ *   The resource ID.
+ * @return SparqlViewsResource
+ *   A resource object.
+ */
+function sparql_views_resource_load($svid) {
+  $result = entity_load_multiple_by_name('sparql_views_resource', array($svid));
+  return $result ? reset($result) : FALSE;
+}
+
+/**
+ * Loads multiple resources.
+ *
+ * @see entity_load_multiple_by_name().
+ */
+function sparql_views_resource_load_multiple($svids, $conditions = array()) {
+  return entity_load_multiple_by_name('sparql_views_resource', $svids, $conditions);
+}
+
+/**
+ * SparqlViewsResource save.
+ *
+ * @param $resource_instance
+ *   A resource instance object.
+ * @return
+ *   The saved resource instance object.
+ */
+function sparql_views_resource_save($resource) {
+  return entity_save('sparql_views_resource', $resource);
+}
+
+/**
+ * SparqlViewsResource delete.
+ *
+ * @param $iid
+ *   SparqlViewsResource instance IDs array.
+ */
+function sparql_views_resource_delete_multiple($svids = array()) {
+  entity_delete_multiple('sparql_views_resource', $svids);
+}
+
+/**
+ * Access callback for the resource entity.
+ */
+function sparql_views_resource_access($op, $entity, $account = NULL, $entity_type = 'sparql_views_resource') {
+  return user_access('create sparql_views resources');
+}
+
+/**
+ * Access callback for the resource type entities.
+ */
+function sparql_views_resource_type_access($op, $entity, $account, $entity_type) {
+  return user_access('administer sparql_views types', $account);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function sparql_views_entity_insert($type, $entity) {
+  switch ($type) {
+    // When a new SPARQL Endpoint is registered, clear the views cache so the
+    // new view type shows up.
+    case 'sparql_registry':
+      cache_clear_all('*', 'cache_views', TRUE);
+      return $entity;
+    // @todo Once #1123676 is fixed, add cache clear for
+    // sparql_views_resource_type.
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function sparql_views_entity_update($entity, $type) {
+  switch ($type) {
+    // When someone updates a SPARQL Views resource type (i.e. by adding an
+    // endpoint), refresh the Views cache so its fields are available in Views
+    // on that endpoint.
+    case 'sparql_views_resource_type':
+      cache_clear_all('*', 'cache_views', TRUE);
+      return $entity;
+  }
+}
+
+function _sparql_views_get_variable_value_types() {
+  return array(
+    'uri' => 'URI',
+    'string' => 'String',
+    'number' => 'Number',
+  );
+}
+
+function _sparql_views_attach_form_options($options, array $selected) {
+  $op['value_type'] = array('default' => '');
+  $op['language'] = array('default' => '');
+  foreach ($selected as $key) {
+    $options['sparql_options'][$key] = $op[$key];
+  }
+  return $options;
+}
+
+function _sparql_views_attach_form_elements($form, $options, array $selected) {
+  $languages = array('<none>') + _sparql_views_get_language_list();
+  $form_elements['value_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Value Type'),
+    '#options' => _sparql_views_get_variable_value_types(),
+    '#default_value' => $options['sparql_options']['value_type'],
+  );
+  $form_elements['language'] = array(
+    '#type' => 'select',
+    '#title' => t('Language'),
+    '#options' => $languages,
+    '#default_value' => $options['sparql_options']['language'],
+  );
+
+  $form['sparql_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('SPARQL Settings'),
+    '#weight' => 0,
+  );
+  foreach ($selected as $key) {
+    $form['sparql_options'][$key] = $form_elements[$key];
+  }
+  return $form;
+}
+
+function _sparql_views_get_language_list() {
+  $languages = array();
+  // ISO 639-1 language codes.
+  $lang_list = array('ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce','ny','zh','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','ka','de','el','gn','gu','ht','ha','he','hz','hi','ho','hu','ia','id','ie','ga','ig','ik','io','is','it','iu','ja','jv','kl','kn','kr','ks','kk','km','ki','rw','ky','kv','kg','ko','ku','kj','la','lb','lg','li','ln','lo','lt','lu','lv','gv','mk','mg','ms','ml','mt','mi','mr','mh','mn','na','nv','nb','nd','ne','ng','nn','no','ii','nr','oc','oj','cu','om','or','os','pa','pi','fa','pl','ps','pt','qu','rm','rn','ro','ru','sa','sc','sd','se','sm','sg','sr','gd','sn','si','sk','sl','so','st','es','su','sw','ss','sv','ta','te','tg','th','ti','bo','tk','tl','tn','to','tr','ts','tt','tw','ty','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','yo','za','zu');
+  foreach ($lang_list as $lang) {
+    $languages[$lang] = $lang;
+  }
+  return $languages;
+}

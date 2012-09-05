@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Defines a field type for referencing one SPARQL Views resource type from
+ * another.
+ */
+
+/**
+ * Implements hook_field_info().
+ */
+function sparql_views_related_resource_field_info() {
+  return array(
+    'sparql_views_related_resource' => array(
+      'label'             => t('Related Resource'),
+      'description'       => t('This field creates a relationship between one RDF resource and another.'),
+      'settings'          => array(
+        'referenceable_types' => array(),
+        'view' => array(
+          'view_name' => '',
+          'display_name' => '',
+          'args' => array(),
+        ),
+      ),
+      'default_widget'    => 'options_select',
+      'default_formatter' => 'text_default',
+      // Support hook_entity_property_info() from contrib "Entity API".
+      'property_type' => 'sparql_views_resource',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function sparql_views_related_resource_field_is_empty($item, $field) {
+  return empty($item['value']);
+}
+
+function sparql_views_related_resource_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  foreach ($items as $delta => $item) {
+    $element[$delta]['#markup'] = check_url($item['value']);
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ *
+ * The List module does not implement widgets of its own, but reuses the
+ * widgets defined in options.module.
+ *
+ * @see hook_options_list()
+ */
+function sparql_views_related_resource_field_widget_info_alter(&$info) {
+  $widgets = array(
+    'options_select' => array('sparql_views_related_resource'),
+  );
+
+  foreach ($widgets as $widget => $field_types) {
+    $info[$widget]['field types'] = array_merge($info[$widget]['field types'], $field_types);
+  }
+}
+

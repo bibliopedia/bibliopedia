@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:time="http://data.semanticweb.org/conference/iswc/2010/time/"
+    xmlns:iswc2010="http://data.semanticweb.org/conference/iswc/2010/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dbpedia="http://dbpedia.org/resource/"
+    xmlns:org="http://data.semanticweb.org/organization/"
+    xmlns:person="http://data.semanticweb.org/person/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:swc="http://data.semanticweb.org/ns/swc/ontology#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:paper="http://data.semanticweb.org/conference/iswc/2010/paper/"
+    xmlns:ical="http://www.w3.org/2002/12/cal/ical#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns="http://data.semanticweb.org/conference/iswc/2010/complete#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    xmlns:shicc="http://www.shicc.net/ontoloy#"
+    xmlns:swrc="http://swrc.ontoware.org/ontology#"
+    xml:base="http://data.semanticweb.org/conference/iswc/2010/complete" > 
+
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/lin-clark">
+    <rdfs:label>Lin Clark</rdfs:label>
+    <foaf:status>Academia</foaf:status>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/research/pcmember"/>
+    <foaf:mbox>lin.clark@deri.org</foaf:mbox>
+    <foaf:family_name>Clark</foaf:family_name>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/518"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/industry-2-chair"/>
+    <foaf:firstName>Lin</foaf:firstName>
+    <foaf:name>Lin Clark</foaf:name>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/chair/webmaster"/>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <foaf:homepage>http://lin-clark.com/</foaf:homepage>
+    <foaf:mbox_sha1sum>579441ea0e0e9f41346d8241f8dd2b81cb2fa5fc</foaf:mbox_sha1sum>
+
+    <!-- Image for formatter testing -->
+    <foaf:img rdf:resource="http://lin-clark.com/sites/default/files/linclark-front.jpg"/>
+    <!-- Number for formatter testing -->
+    <foaf:age>11101</foaf:age>
+    <!-- Language for filter testing -->
+    <swc:affiliation xml:lang="ie">Ollscoil na hÉireann, Gaillimh</swc:affiliation>
+    <!-- Person for foaf:knows -->
+    <foaf:knows rdf:resource="http://data.semanticweb.org/person/vinny-reynolds"/>
+  </rdf:Description>
+
+  <!-- Authored Paper -->
+  <rdf:Description rdf:about="http://data.semanticweb.org/conference/iswc/2010/paper/518">
+    <foaf:maker rdf:resource="http://data.semanticweb.org/person/lin-clark"/>
+    <swc:authorList rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/518/authorlist"/>
+    <swrc:url rdf:resource="http://iswc2010.semanticweb.org/pdf/518.pdf"/>
+    <dc:creator rdf:resource="http://data.semanticweb.org/person/lin-clark"/>
+    <dc:subject>End-user Programming</dc:subject>
+    <dc:subject>User Interfaces</dc:subject>
+    <dc:subject>CMS</dc:subject>
+    <rdfs:label>SPARQL Views: A Visual SPARQL Query Builder for Drupal</rdfs:label>
+    <swrc:author rdf:resource="http://data.semanticweb.org/person/lin-clark"/>
+    <swrc:month>November</swrc:month>
+    <swc:isPartOf rdf:resource="http://data.semanticweb.org/conference/iswc/2010/poster-demo-proceedings"/>
+    <swrc:abstract>Publishing Linked Data on the Web has become much easier with tools such as Drupal. However, consuming that data and presenting it in a meaningful way is still difficult for both Web developers and for Semantic Web practitioners. We demonstrate a module for Drupal which supports visual query building for SPARQL queries and enables meaningful displays of the query result.</swrc:abstract>
+    <rdf:type rdf:resource="http://swrc.ontoware.org/ontology#InProceedings"/>
+    <dc:title>SPARQL Views: A Visual SPARQL Query Builder for Drupal</dc:title>
+    <swrc:year>2010</swrc:year>
+  </rdf:Description>
+
+  <!-- 10 people for basic query testing -->
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/michael-hausenblas">
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <foaf:firstName>Michael</foaf:firstName>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <rdfs:label>Michael Hausenblas</rdfs:label>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <foaf:name>Michael Hausenblas</foaf:name>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:family_name>Hausenblas</foaf:family_name>
+    <foaf:mbox>michael.hausenblas@deri.org</foaf:mbox>
+    <foaf:status>Academia</foaf:status>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/in-use/pcmember"/>
+    <foaf:homepage>http://sw-app.org/mic.xhtml</foaf:homepage>
+    <foaf:mbox_sha1sum>327b61f3721afbd39dceadf5e5b4fc2d79d5dcc8</foaf:mbox_sha1sum>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/vinny-reynolds">
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <foaf:firstName>Vinny</foaf:firstName>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/research/reviewer"/>
+    <foaf:family_name>Reynolds</foaf:family_name>
+    <foaf:mbox>vinny.reynolds@deri.org</foaf:mbox>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <foaf:mbox_sha1sum>2e5fe5458ea3e457515f91d5f32d5bf3ee27eb0e</foaf:mbox_sha1sum>
+    <foaf:name>Vinny Reynolds</foaf:name>
+    <foaf:homepage>http://www.deri.ie/about/team/member/vinny_reynolds/</foaf:homepage>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/503"/>
+    <foaf:status>Academia</foaf:status>
+    <rdfs:label>Vinny Reynolds</rdfs:label>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/nuno-lopes">
+    <foaf:homepage>http://www.deri.ie/about/team/member/nuno_lopes/</foaf:homepage>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <foaf:status>Academia</foaf:status>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/442"/>
+    <foaf:mbox_sha1sum>f55387fb8cb7af2a64a81ddeb4f1e8affb000ed0</foaf:mbox_sha1sum>
+    <rdfs:label>Nuno Lopes</rdfs:label>
+    <foaf:mbox>nuno.lopes@deri.org</foaf:mbox>
+    <foaf:family_name>Lopes</foaf:family_name>
+    <foaf:firstName>Nuno</foaf:firstName>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/51"/>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <foaf:name>Nuno Lopes</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/aidan-hogan">
+    <foaf:status>Academia</foaf:status>
+    <foaf:homepage>http://sw.deri.org/~aidanh/</foaf:homepage>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/research/reviewer"/>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <foaf:family_name>Hogan</foaf:family_name>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <foaf:firstName>Aidan</foaf:firstName>
+    <foaf:mbox>aidan.hogan@deri.org</foaf:mbox>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:mbox_sha1sum>d2163e057507f828085f322cc77dc43b4105a158</foaf:mbox_sha1sum>
+    <foaf:name>Aidan Hogan</foaf:name>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/305"/>
+    <rdfs:label>Aidan Hogan</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/josiane-xavier-parreira">
+    <foaf:mbox_sha1sum>a69a534c7a5802053569792e8c769d8981487eb4</foaf:mbox_sha1sum>
+    <foaf:made rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/503"/>
+    <foaf:firstName>Josiane</foaf:firstName>
+    <rdfs:label>Josiane Xavier Parreira</rdfs:label>
+    <foaf:family_name>Parreira</foaf:family_name>
+    <foaf:homepage>http://www.deri.ie/about/team/member/josiane_parreira/</foaf:homepage>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <foaf:mbox>josiane.parreira@deri.org</foaf:mbox>
+    <foaf:status>Academia</foaf:status>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <foaf:name>Josiane Xavier Parreira</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/knud-moeller">
+    <foaf:name>Knud Moeller</foaf:name>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/research/pcmember"/>
+    <foaf:homepage>http://kantenwerk.org/</foaf:homepage>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/national-university-of-ireland-galway"/>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Ireland"/>
+    <foaf:mbox>knud.moeller@deri.org</foaf:mbox>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:mbox_sha1sum>b15d1e7efb11374644555fa9734bf75a553a362c</foaf:mbox_sha1sum>
+    <foaf:status>Academia</foaf:status>
+    <foaf:firstName>Knud</foaf:firstName>
+    <rdfs:label>Knud Moeller</rdfs:label>
+    <swc:affiliation>National University of Ireland, Galway</swc:affiliation>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/in-use/pcmember"/>
+    <foaf:family_name>Moeller</foaf:family_name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/denny-vrandecic">
+    <swc:affiliation>Karlsruhe Institute of Technology</swc:affiliation>
+    <foaf:firstName>Denny</foaf:firstName>
+    <foaf:mbox>denny.vrandecic@kit.edu </foaf:mbox>
+    <foaf:mbox_sha1sum>724da1947282453da70768fab5ab29e1ba12d88a</foaf:mbox_sha1sum>
+    <foaf:name>Denny Vrandecic</foaf:name>
+    <foaf:status>Academia</foaf:status>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/research/reviewer"/>
+    <foaf:homepage>http://www.aifb.kit.edu/web/Denny_Vrandecic/en</foaf:homepage>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Germany"/>
+    <rdfs:label>Denny Vrandecic</rdfs:label>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/karlsruhe-institute-of-technology"/>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/dc/pcmember"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:family_name>Vrandecic</foaf:family_name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/elena-simperl">
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/dc/pcmember"/>
+    <swc:affiliation>Universitat Innsbruck</swc:affiliation>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/Austria"/>
+    <foaf:mbox_sha1sum>09814d21068fb5bacc73c395dfd09780f462748a</foaf:mbox_sha1sum>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/universitat-innsbruck"/>
+    <foaf:family_name>Simperl</foaf:family_name>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:status>Academia</foaf:status>
+    <foaf:mbox>elena.simperl@sti2.at</foaf:mbox>
+    <foaf:firstName>Elena</foaf:firstName>
+    <rdfs:label>Elena Simperl</rdfs:label>
+    <foaf:homepage>http://members.sti2.at/~elenas/</foaf:homepage>
+    <foaf:name>Elena Simperl</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/person/leigh-dodds">
+    <foaf:firstName>Leigh</foaf:firstName>
+    <swrc:affiliation rdf:resource="http://data.semanticweb.org/organization/talis"/>
+    <foaf:status>Industry</foaf:status>
+    <foaf:mbox>leigh.dodds@talis.com</foaf:mbox>
+    <rdfs:label>Leigh Dodds</rdfs:label>
+    <foaf:homepage>http://www.ldodds.com/</foaf:homepage>
+    <foaf:mbox_sha1sum>3605b869216404d54ebcf0d2a7e045c39eb3109e</foaf:mbox_sha1sum>
+    <foaf:name>Leigh Dodds</foaf:name>
+    <foaf:based_near rdf:resource="http://dbpedia.org/resource/United_Kingdom"/>
+    <swc:holdsRole rdf:resource="http://data.semanticweb.org/conference/iswc/2010/in-use/pcmember"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <swc:affiliation>Talis</swc:affiliation>
+    <foaf:family_name>Dodds</foaf:family_name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.semanticweb.org/conference/iswc/2010/paper/550">
+    <swrc:author rdf:resource="http://data.semanticweb.org/person/silver-oliver"/>
+    <swc:authorList rdf:resource="http://data.semanticweb.org/conference/iswc/2010/paper/550/authorlist"/>
+    <dc:title>Enhancing the BBC's World Cup coverage with an ontology driven information architecture</dc:title>
+    <rdfs:label>Enhancing the BBC's World Cup coverage with an ontology driven information architecture</rdfs:label>
+    <swrc:year>2010</swrc:year>
+    <dc:creator rdf:resource="http://data.semanticweb.org/person/silver-oliver"/>
+    <swc:isPartOf rdf:resource="http://data.semanticweb.org/conference/iswc/2010/industry-track-proceedings"/>
+    <swrc:url rdf:resource="http://iswc2010.semanticweb.org/pdf/550.pdf"/>
+    <rdf:type rdf:resource="http://swrc.ontoware.org/ontology#InProceedings"/>
+    <swrc:month>November</swrc:month>
+    <foaf:maker rdf:resource="http://data.semanticweb.org/person/silver-oliver"/>
+  </rdf:Description>
+
+  </rdf:RDF>
