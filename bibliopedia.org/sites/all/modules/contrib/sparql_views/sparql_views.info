@@ -1,0 +1,35 @@
+name = SPARQL Views
+description = A module for creating SPARQL queries on external endpoints and displaying them using Views.
+dependencies[] = views
+dependencies[] = entity
+dependencies[] = sparql
+dependencies[] = sparql_registry
+dependencies[] = rdfx
+package = RDF
+core = 7.x
+files[] = sparql_views.admin.inc
+files[] = sparql_views.views.inc
+files[] = includes/sparql_views.controller.inc
+files[] = handlers/sparql_views_handler_argument.inc
+files[] = handlers/sparql_views_handler_field.inc
+files[] = handlers/sparql_views_handler_field_rdftype.inc
+files[] = handlers/sparql_views_handler_field_subject.inc
+files[] = handlers/sparql_views_handler_sort.inc
+files[] = handlers/sparql_views_handler_relationship.inc
+files[] = handlers/sparql_views_handler_filter.inc
+files[] = handlers/sparql_views_handler_filter_field_value.inc
+files[] = handlers/sparql_views_handler_filter_language.inc
+files[] = handlers/sparql_views_handler_filter_rdftype.inc
+files[] = plugins/sparql_views_plugin_query_sparql.inc
+files[] = plugins/sparql_views_plugin_argument_default_field.inc
+files[] = tests/sparql_views.test
+files[] = tests/sparql_views_query.test
+files[] = tests/sparql_views_basic.test
+files[] = tests/sparql_views_formatter.test
+
+; Information added by drupal.org packaging script on 2011-08-09
+version = "7.x-2.0-beta1"
+core = "7.x"
+project = "sparql_views"
+datestamp = "1312904520"
+

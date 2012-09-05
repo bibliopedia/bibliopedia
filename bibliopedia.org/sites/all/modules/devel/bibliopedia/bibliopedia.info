@@ -1,0 +1,8 @@
+name = Bibliopedia Debugging
+dependencies[] = rules
+dependencies[] = services
+dependencies[] = entityreference
+description = Debugging code
+package = Bibliopedia
+core = 7.x
+

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * Test the SPARQL Views resource CRUD handling.
+ */
+class SparqlViewsResourceTypeCrud extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'SPARQL Views resource type CRUD',
+      'description' => 'Test the create, update and remove of SPARQL Views resource types and resources.',
+      'group' => 'SPARQL Views',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('sparql_views');
+  }
+
+  /**
+   * Test CRUD of resource entity.
+   */
+  function testSparqlViewsResourceTypeCrud() {
+    $web_user = $this->drupalCreateUser();
+
+    $resource_type = sparql_views_resource_type_create('foo');
+    $resource_type->save();
+
+    $resource = sparql_views_resource_create('foo', array(), $web_user);
+    $resource->save();
+    $svid = $resource->svid;
+
+    // Reload the resource to see it was saved.
+    $resource = sparql_views_resource_load($svid);
+    $this->assertTrue(!empty($resource->svid), t('Resource was saved to the database.'));
+
+    $this->assertEqual($resource->uid, $web_user->uid, 'Resource has been saved for the right user.');
+
+    // Make sure an exception is thrown if resource type already exists.
+    try {
+      $resource_type = sparql_views_resource_type_create('foo');
+      $this->fail("Creating the same resource type hasn't created an exception.");
+    }
+    catch (Exception $e) {
+      $this->pass("Exception was thrown: ". $e->getMessage());
+    }
+  }
+}
